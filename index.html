@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>私人收藏导航</title>
+  <meta name="description" content="单页面私人分类收藏导航网站" />
+  <style>
+    :root{
+      --bg:#f6f7fb;--panel:#ffffff;--text:#172033;--muted:#6b7280;--line:#e8ecf3;
+      --primary:#4f46e5;--primary2:#06b6d4;--danger:#ef4444;--shadow:0 20px 60px rgba(20,30,55,.10);
+      --radius:22px;
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;background:
+      radial-gradient(circle at top left,rgba(79,70,229,.14),transparent 28rem),
+      radial-gradient(circle at top right,rgba(6,182,212,.13),transparent 24rem),var(--bg);color:var(--text);min-height:100vh}
+    a{color:inherit;text-decoration:none} button,input,select,textarea{font:inherit}
+    .wrap{width:min(1180px,calc(100% - 32px));margin:0 auto}
+    .hero{padding:32px 0 18px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:26px}
+    .brand{display:flex;align-items:center;gap:12px}.brand-badge{width:44px;height:44px;border-radius:16px;background:linear-gradient(135deg,var(--primary),var(--primary2));display:grid;place-items:center;color:#fff;font-size:24px;box-shadow:var(--shadow)}
+    .brand-title{font-size:20px;font-weight:850;letter-spacing:-.02em}.brand-sub{font-size:13px;color:var(--muted);margin-top:3px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}.btn{border:0;border-radius:14px;padding:10px 14px;background:#fff;color:var(--text);cursor:pointer;box-shadow:0 8px 22px rgba(20,30,55,.08);border:1px solid rgba(232,236,243,.9);transition:.18s transform,.18s box-shadow,.18s background}.btn:hover{transform:translateY(-1px);box-shadow:0 14px 28px rgba(20,30,55,.12)}
+    .btn.primary{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;border:0}.btn.danger{color:#fff;background:var(--danger);border:0}.btn.ghost{box-shadow:none;background:transparent;border:1px solid var(--line)}.btn.small{padding:7px 10px;border-radius:11px;font-size:13px}
+    .intro{display:grid;grid-template-columns:1.2fr .8fr;gap:20px;align-items:stretch}.glass{background:rgba(255,255,255,.82);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.85);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .headline{padding:28px}.headline h1{margin:0 0 10px;font-size:clamp(30px,6vw,56px);line-height:1.02;letter-spacing:-.06em}.headline p{margin:0;color:var(--muted);font-size:16px;line-height:1.7}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}.stat{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px}.stat b{display:block;font-size:23px}.stat span{font-size:12px;color:var(--muted)}
+    .searchbox{padding:18px;display:flex;flex-direction:column;gap:12px}.searchbox input{width:100%;border:1px solid var(--line);outline:none;background:#fff;border-radius:16px;padding:14px 16px;font-size:15px}.searchbox input:focus{border-color:rgba(79,70,229,.55);box-shadow:0 0 0 4px rgba(79,70,229,.10)}
+    .hint{font-size:13px;color:var(--muted);line-height:1.7;background:#f9fafb;border:1px dashed #d8deeb;border-radius:16px;padding:12px}
+    .filters{display:flex;gap:10px;overflow:auto;padding:18px 0 12px;scrollbar-width:none}.filters::-webkit-scrollbar{display:none}.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 13px;display:flex;align-items:center;gap:8px;white-space:nowrap;cursor:pointer;color:#374151;box-shadow:0 6px 16px rgba(20,30,55,.05)}.chip.active{color:#fff;border-color:transparent;background:linear-gradient(135deg,var(--primary),var(--primary2))}.dot{width:9px;height:9px;border-radius:999px;background:var(--primary)}
+    .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;padding:8px 0 48px}.card{position:relative;background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px;min-height:178px;box-shadow:0 12px 32px rgba(20,30,55,.07);transition:.18s transform,.18s box-shadow,.18s border-color;display:flex;flex-direction:column;gap:13px;overflow:hidden}.card:before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--accent,var(--primary))}.card:hover{transform:translateY(-4px);box-shadow:0 20px 46px rgba(20,30,55,.12);border-color:rgba(79,70,229,.22)}
+    .card-head{display:flex;gap:12px;align-items:center}.logo{width:46px;height:46px;border-radius:16px;background:#f3f4f6;border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;flex:0 0 auto}.logo img{width:30px;height:30px;object-fit:contain}.logo span{font-size:22px}.title{font-weight:850;line-height:1.2}.url{font-size:12px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}.desc{font-size:13px;line-height:1.6;color:#596174;min-height:42px}.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto}.tag{font-size:11px;color:#475569;background:#f1f5f9;border-radius:999px;padding:4px 8px}.card-admin{position:absolute;right:10px;top:10px;display:none;gap:6px}.admin-on .card-admin{display:flex}.empty{grid-column:1/-1;text-align:center;color:var(--muted);border:1px dashed #cfd7e6;border-radius:22px;padding:46px 16px;background:rgba(255,255,255,.55)}
+    .modal{position:fixed;inset:0;background:rgba(15,23,42,.48);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}.modal.show{display:flex}.dialog{width:min(980px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:26px;box-shadow:0 30px 90px rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.6)}.dialog-head{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);z-index:2;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:18px 20px;border-bottom:1px solid var(--line)}.dialog-head h2{margin:0;font-size:19px}.dialog-body{padding:20px}.login-box{width:min(440px,100%)}
+    .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}.field label{font-size:13px;font-weight:750;color:#374151}.field input,.field select,.field textarea{border:1px solid var(--line);border-radius:14px;padding:11px 12px;outline:none;background:#fff}.field textarea{min-height:76px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(79,70,229,.55);box-shadow:0 0 0 4px rgba(79,70,229,.10)}.section{border:1px solid var(--line);border-radius:22px;padding:16px;margin-bottom:16px;background:#fff}.section h3{margin:0 0 14px;font-size:16px}.row-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.list{display:flex;flex-direction:column;gap:8px}.item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px;border:1px solid var(--line);border-radius:15px;background:#fafafa}.item-main{min-width:0}.item-title{font-weight:760}.item-sub{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px}.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 9px;background:#f1f5f9;color:#475569;font-size:12px}
+    .toast{position:fixed;right:18px;bottom:18px;background:#111827;color:#fff;border-radius:16px;padding:12px 14px;box-shadow:var(--shadow);display:none;z-index:80}.toast.show{display:block;animation:pop .25s ease}@keyframes pop{from{transform:translateY(8px);opacity:.2}to{transform:none;opacity:1}}
+    .footer{padding:20px 0 38px;text-align:center;color:var(--muted);font-size:13px}
+    @media (max-width:1000px){.grid{grid-template-columns:repeat(3,1fr)}.intro{grid-template-columns:1fr}.searchbox{order:-1}}
+    @media (max-width:720px){.wrap{width:min(100% - 22px,1180px)}.topbar{align-items:flex-start;flex-direction:column}.actions{justify-content:flex-start}.grid{grid-template-columns:repeat(2,1fr);gap:12px}.headline{padding:22px}.stats{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.item{align-items:flex-start;flex-direction:column}.item-sub{max-width:100%}}
+    @media (max-width:480px){.grid{grid-template-columns:1fr}.card{min-height:auto}.dialog{border-radius:20px}.dialog-body{padding:14px}}
+  </style>
+</head>
+<body>
+  <div id="app">
+    <header class="hero wrap">
+      <div class="topbar">
+        <div class="brand">
+          <div class="brand-badge">✦</div>
+          <div><div class="brand-title" id="siteTitleTop">私人收藏导航</div><div class="brand-sub" id="siteSubTop">分类整理，一键直达</div></div>
+        </div>
+        <div class="actions">
+          <button class="btn ghost" id="exportBtn">导出备份</button>
+          <label class="btn ghost" for="importFile">导入备份</label>
+          <input id="importFile" type="file" accept="application/json" hidden>
+          <button class="btn primary" id="adminBtn">管理员登录</button>
+        </div>
+      </div>
+      <div class="intro">
+        <section class="headline glass">
+          <h1 id="heroTitle">你的私人网址收藏夹</h1>
+          <p id="heroDesc">把常用网站按分类、颜色、图标和 Logo 收纳起来。打开网页即可搜索、筛选、访问；登录管理员后可新增、编辑、删除。</p>
+          <div class="stats">
+            <div class="stat"><b id="linkCount">0</b><span>收藏链接</span></div>
+            <div class="stat"><b id="catCount">0</b><span>分类</span></div>
+            <div class="stat"><b id="tagCount">0</b><span>标签</span></div>
+          </div>
+        </section>
+        <section class="searchbox glass">
+          <input id="searchInput" type="search" placeholder="搜索名称、网址、描述、标签……" autocomplete="off">
+          <div class="hint">提示：点击卡片会在新窗口打开网站。Logo 可填图片地址；不填时会自动尝试读取网站图标。</div>
+        </section>
+      </div>
+      <nav class="filters" id="filters"></nav>
+    </header>
+
+    <main class="wrap">
+      <section class="grid" id="grid"></section>
+    </main>
+    <footer class="footer wrap">本页为纯静态单文件网站，数据默认保存在当前浏览器 localStorage 中，请定期导出备份。</footer>
+  </div>
+
+  <div class="modal" id="adminModal" aria-hidden="true">
+    <div class="dialog login-box" id="loginDialog">
+      <div class="dialog-head"><h2>管理员登录</h2><button class="btn small ghost" data-close>关闭</button></div>
+      <div class="dialog-body">
+        <div class="form-grid">
+          <div class="field full"><label>管理员账号</label><input id="loginUser" placeholder="默认 admin"></div>
+          <div class="field full"><label>管理员密码</label><input id="loginPass" type="password" placeholder="默认 123456"></div>
+        </div>
+        <div class="row-actions"><button class="btn primary" id="loginBtn">登录</button></div>
+        <p class="hint">首次部署前请在文件顶部脚本中修改 <b>ADMIN_USER</b> 和 <b>ADMIN_PASS</b>。</p>
+      </div>
+    </div>
+
+    <div class="dialog" id="managerDialog" style="display:none">
+      <div class="dialog-head"><h2>导航管理后台</h2><div class="actions"><button class="btn small ghost" id="logoutBtn">退出登录</button><button class="btn small ghost" data-close>关闭</button></div></div>
+      <div class="dialog-body">
+        <section class="section">
+          <h3>网站文字设置</h3>
+          <div class="form-grid">
+            <div class="field"><label>顶部标题</label><input id="setTitle"></div>
+            <div class="field"><label>顶部副标题</label><input id="setSub"></div>
+            <div class="field full"><label>首页大标题</label><input id="setHero"></div>
+            <div class="field full"><label>首页说明</label><textarea id="setDesc"></textarea></div>
+          </div>
+          <div class="row-actions"><button class="btn primary" id="saveSettingsBtn">保存文字</button></div>
+        </section>
+
+        <section class="section">
+          <h3>分类管理</h3>
+          <div class="form-grid">
+            <div class="field"><label>分类名称</label><input id="catName" placeholder="例如：AI 工具"></div>
+            <div class="field"><label>图标/Emoji</label><input id="catIcon" placeholder="例如：🤖"></div>
+            <div class="field"><label>分类颜色</label><input id="catColor" type="color" value="#4f46e5"></div>
+            <div class="field"><label>&nbsp;</label><button class="btn primary" id="addCatBtn">新增分类</button></div>
+          </div>
+          <div class="list" id="catList" style="margin-top:14px"></div>
+        </section>
+
+        <section class="section">
+          <h3 id="linkFormTitle">新增链接</h3>
+          <input id="editingLinkId" type="hidden">
+          <div class="form-grid">
+            <div class="field"><label>网站名称</label><input id="linkTitle" placeholder="例如：Cloudflare"></div>
+            <div class="field"><label>网址 URL</label><input id="linkUrl" placeholder="https://example.com"></div>
+            <div class="field"><label>所属分类</label><select id="linkCategory"></select></div>
+            <div class="field"><label>Logo 图片地址</label><input id="linkLogo" placeholder="可不填，自动读取网站图标"></div>
+            <div class="field full"><label>描述</label><textarea id="linkDesc" placeholder="简单写这个网站用途"></textarea></div>
+            <div class="field full"><label>标签</label><input id="linkTags" placeholder="多个标签用逗号隔开，例如：AI,写作,常用"></div>
+          </div>
+          <div class="row-actions"><button class="btn primary" id="saveLinkBtn">保存链接</button><button class="btn ghost" id="clearLinkBtn">清空表单</button></div>
+        </section>
+
+        <section class="section">
+          <h3>全部链接</h3>
+          <div class="list" id="linkList"></div>
+        </section>
+
+        <section class="section">
+          <h3>危险操作</h3>
+          <p class="hint">重置示例数据会清空当前浏览器保存的数据。操作前建议先点“导出备份”。</p>
+          <button class="btn danger" id="resetBtn">重置为示例数据</button>
+        </section>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ====== 部署前请改这里：管理员账号和密码 ====== */
+    const ADMIN_USER = "admin";
+    const ADMIN_PASS = "123456";
+    /* ============================================ */
+
+    const STORAGE_KEY = "private_nav_data_v1";
+    const ADMIN_KEY = "private_nav_admin_session";
+    let activeCat = "all";
+    let query = "";
+    let state = loadState();
+
+    const $ = (s) => document.querySelector(s);
+    const $$ = (s) => Array.from(document.querySelectorAll(s));
+
+    function uid(prefix="id"){
+      return prefix + "_" + Math.random().toString(36).slice(2,9) + Date.now().toString(36).slice(-4);
+    }
+
+    function sampleData(){
+      return {
+        settings:{
+          title:"私人收藏导航",
+          subtitle:"分类整理，一键直达",
+          hero:"你的私人网址收藏夹",
+          desc:"把常用网站按分类、颜色、图标和 Logo 收纳起来。打开网页即可搜索、筛选、访问；登录管理员后可新增、编辑、删除。"
+        },
+        categories:[
+          {id:"cat_ai",name:"AI 工具",icon:"🤖",color:"#4f46e5"},
+          {id:"cat_design",name:"设计灵感",icon:"🎨",color:"#ec4899"},
+          {id:"cat_dev",name:"开发运维",icon:"⚙️",color:"#0ea5e9"},
+          {id:"cat_life",name:"生活常用",icon:"🏠",color:"#10b981"}
+        ],
+        links:[
+          {id:uid("link"),title:"ChatGPT",url:"https://chatgpt.com",logo:"",desc:"AI 对话、写作、代码和资料整理。",categoryId:"cat_ai",tags:["AI","写作","常用"]},
+          {id:uid("link"),title:"Cloudflare",url:"https://dash.cloudflare.com",logo:"",desc:"域名、Pages、Workers 和网站部署管理。",categoryId:"cat_dev",tags:["部署","域名"]},
+          {id:uid("link"),title:"GitHub",url:"https://github.com",logo:"",desc:"代码仓库与 GitHub Pages 部署。",categoryId:"cat_dev",tags:["代码","静态网站"]},
+          {id:uid("link"),title:"Figma",url:"https://figma.com",logo:"",desc:"在线 UI 设计与原型工具。",categoryId:"cat_design",tags:["设计","原型"]},
+          {id:uid("link"),title:"YouTube",url:"https://youtube.com",logo:"",desc:"视频学习和娱乐收藏。",categoryId:"cat_life",tags:["视频","学习"]}
+        ]
+      };
+    }
+
+    function loadState(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return sampleData();
+        const parsed = JSON.parse(raw);
+        if(!parsed.categories || !parsed.links) return sampleData();
+        parsed.settings = parsed.settings || sampleData().settings;
+        return parsed;
+      }catch(e){ return sampleData(); }
+    }
+    function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    function isAdmin(){ return sessionStorage.getItem(ADMIN_KEY) === "1"; }
+    function toast(msg){ const el=$("#toast"); el.textContent=msg; el.classList.add("show"); setTimeout(()=>el.classList.remove("show"),2200); }
+    function safeUrl(url){
+      const u = String(url || "").trim();
+      if(!u) return "#";
+      if(/^https?:\/\//i.test(u)) return u;
+      return "https://" + u;
+    }
+    function hostname(url){
+      try{ return new URL(safeUrl(url)).hostname.replace(/^www\./,""); }catch(e){ return String(url||""); }
+    }
+    function favicon(url){ return "https://www.google.com/s2/favicons?sz=64&domain=" + encodeURIComponent(hostname(url)); }
+    function getCat(id){ return state.categories.find(c=>c.id===id) || state.categories[0] || {id:"none",name:"未分类",icon:"🔖",color:"#64748b"}; }
+    function allTags(){ return Array.from(new Set(state.links.flatMap(l=>l.tags||[]).filter(Boolean))); }
+
+    function render(){
+      document.body.classList.toggle("admin-on", isAdmin());
+      const s = state.settings || sampleData().settings;
+      $("#siteTitleTop").textContent = s.title;
+      $("#siteSubTop").textContent = s.subtitle;
+      $("#heroTitle").textContent = s.hero;
+      $("#heroDesc").textContent = s.desc;
+      $("#linkCount").textContent = state.links.length;
+      $("#catCount").textContent = state.categories.length;
+      $("#tagCount").textContent = allTags().length;
+      renderFilters(); renderGrid(); renderAdmin();
+      $("#adminBtn").textContent = isAdmin()?"打开后台":"管理员登录";
+    }
+
+    function renderFilters(){
+      const filters = [{id:"all",name:"全部",icon:"✨",color:"#4f46e5"}, ...state.categories];
+      $("#filters").innerHTML = filters.map(c=>`<button class="chip ${activeCat===c.id?'active':''}" data-cat="${c.id}"><span>${escapeHtml(c.icon||'🔖')}</span><span>${escapeHtml(c.name)}</span></button>`).join("");
+      $$(".chip").forEach(btn=>btn.onclick=()=>{activeCat=btn.dataset.cat; renderGrid(); renderFilters();});
+    }
+
+    function matches(link){
+      const q = query.trim().toLowerCase();
+      const catOk = activeCat === "all" || link.categoryId === activeCat;
+      if(!catOk) return false;
+      if(!q) return true;
+      return [link.title,link.url,link.desc,(link.tags||[]).join(" "),getCat(link.categoryId).name].join(" ").toLowerCase().includes(q);
+    }
+
+    function renderGrid(){
+      const links = state.links.filter(matches);
+      if(!links.length){ $("#grid").innerHTML = `<div class="empty">没有找到链接。登录后台后可以新增收藏，或换个关键词试试。</div>`; return; }
+      $("#grid").innerHTML = links.map(link=>{
+        const cat = getCat(link.categoryId);
+        const img = link.logo ? link.logo : favicon(link.url);
+        const tags = (link.tags||[]).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join("");
+        return `<article class="card" style="--accent:${cat.color}">
+          <div class="card-admin"><button class="btn small ghost" data-edit="${link.id}">编辑</button><button class="btn small danger" data-del="${link.id}">删</button></div>
+          <a href="${safeUrl(link.url)}" target="_blank" rel="noopener noreferrer" aria-label="打开 ${escapeHtml(link.title)}">
+            <div class="card-head"><div class="logo"><img src="${img}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none">${escapeHtml(cat.icon||'🔗')}</span></div><div><div class="title">${escapeHtml(link.title)}</div><div class="url">${escapeHtml(hostname(link.url))}</div></div></div>
+            <div class="desc">${escapeHtml(link.desc||"暂无描述")}</div>
+            <div class="tags"><span class="tag" style="background:${hexToSoft(cat.color)}">${escapeHtml(cat.icon||'🔖')} ${escapeHtml(cat.name)}</span>${tags}</div>
+          </a>
+        </article>`;
+      }).join("");
+      $$('[data-edit]').forEach(b=>b.onclick=(e)=>{e.preventDefault(); fillLinkForm(b.dataset.edit); openManager();});
+      $$('[data-del]').forEach(b=>b.onclick=(e)=>{e.preventDefault(); deleteLink(b.dataset.del);});
+    }
+
+    function renderAdmin(){
+      $("#setTitle").value = state.settings.title || ""; $("#setSub").value = state.settings.subtitle || "";
+      $("#setHero").value = state.settings.hero || ""; $("#setDesc").value = state.settings.desc || "";
+      const catOptions = state.categories.map(c=>`<option value="${c.id}">${escapeHtml(c.icon||'🔖')} ${escapeHtml(c.name)}</option>`).join("");
+      $("#linkCategory").innerHTML = catOptions;
+      $("#catList").innerHTML = state.categories.map(c=>`<div class="item"><div class="item-main"><div class="item-title"><span class="pill"><span class="dot" style="background:${c.color}"></span>${escapeHtml(c.icon||'🔖')} ${escapeHtml(c.name)}</span></div><div class="item-sub">颜色：${escapeHtml(c.color)}</div></div><div class="actions"><button class="btn small ghost" data-cat-edit="${c.id}">编辑</button><button class="btn small danger" data-cat-del="${c.id}">删除</button></div></div>`).join("") || `<div class="empty">还没有分类</div>`;
+      $("#linkList").innerHTML = state.links.map(l=>`<div class="item"><div class="item-main"><div class="item-title">${escapeHtml(l.title)}</div><div class="item-sub">${escapeHtml(getCat(l.categoryId).name)} · ${escapeHtml(safeUrl(l.url))}</div></div><div class="actions"><button class="btn small ghost" data-list-edit="${l.id}">编辑</button><button class="btn small danger" data-list-del="${l.id}">删除</button></div></div>`).join("") || `<div class="empty">还没有链接</div>`;
+      $$('[data-cat-edit]').forEach(b=>b.onclick=()=>editCategory(b.dataset.catEdit));
+      $$('[data-cat-del]').forEach(b=>b.onclick=()=>deleteCategory(b.dataset.catDel));
+      $$('[data-list-edit]').forEach(b=>b.onclick=()=>fillLinkForm(b.dataset.listEdit));
+      $$('[data-list-del]').forEach(b=>b.onclick=()=>deleteLink(b.dataset.listDel));
+    }
+
+    function openLogin(){ $("#adminModal").classList.add("show"); $("#loginDialog").style.display="block"; $("#managerDialog").style.display="none"; setTimeout(()=>$("#loginUser").focus(),50); }
+    function openManager(){ $("#adminModal").classList.add("show"); $("#loginDialog").style.display="none"; $("#managerDialog").style.display="block"; renderAdmin(); }
+    function closeModal(){ $("#adminModal").classList.remove("show"); }
+
+    function login(){
+      if($("#loginUser").value.trim()===ADMIN_USER && $("#loginPass").value===ADMIN_PASS){ sessionStorage.setItem(ADMIN_KEY,"1"); toast("登录成功"); openManager(); render(); }
+      else toast("账号或密码不正确");
+    }
+    function logout(){ sessionStorage.removeItem(ADMIN_KEY); closeModal(); render(); toast("已退出"); }
+
+    function addCategory(){
+      const name=$("#catName").value.trim(); const icon=$("#catIcon").value.trim() || "🔖"; const color=$("#catColor").value || "#4f46e5";
+      if(!name){ toast("请填写分类名称"); return; }
+      state.categories.push({id:uid("cat"),name,icon,color}); saveState(); $("#catName").value=""; $("#catIcon").value=""; render(); toast("分类已新增");
+    }
+    function editCategory(id){
+      const c=state.categories.find(x=>x.id===id); if(!c) return;
+      const name=prompt("分类名称",c.name); if(name===null) return;
+      const icon=prompt("图标/Emoji",c.icon||"🔖"); if(icon===null) return;
+      const color=prompt("颜色 HEX，例如 #4f46e5",c.color||"#4f46e5"); if(color===null) return;
+      c.name=name.trim()||c.name; c.icon=icon.trim()||"🔖"; c.color=/^#[0-9a-f]{6}$/i.test(color.trim())?color.trim():c.color;
+      saveState(); render(); toast("分类已更新");
+    }
+    function deleteCategory(id){
+      if(state.categories.length<=1){ toast("至少保留一个分类"); return; }
+      const c=getCat(id);
+      if(!confirm(`确定删除分类「${c.name}」？该分类下链接会移动到第一个分类。`)) return;
+      const fallback=state.categories.find(x=>x.id!==id).id;
+      state.links.forEach(l=>{ if(l.categoryId===id) l.categoryId=fallback; });
+      state.categories=state.categories.filter(c=>c.id!==id); saveState(); activeCat="all"; render(); toast("分类已删除");
+    }
+
+    function fillLinkForm(id){
+      const l=state.links.find(x=>x.id===id); if(!l) return;
+      $("#editingLinkId").value=l.id; $("#linkTitle").value=l.title; $("#linkUrl").value=l.url; $("#linkCategory").value=l.categoryId; $("#linkLogo").value=l.logo||""; $("#linkDesc").value=l.desc||""; $("#linkTags").value=(l.tags||[]).join(", ");
+      $("#linkFormTitle").textContent="编辑链接"; $("#linkTitle").scrollIntoView({behavior:"smooth",block:"center"});
+    }
+    function clearLinkForm(){
+      ["#editingLinkId","#linkTitle","#linkUrl","#linkLogo","#linkDesc","#linkTags"].forEach(s=>$(s).value="");
+      if(state.categories[0]) $("#linkCategory").value=state.categories[0].id;
+      $("#linkFormTitle").textContent="新增链接";
+    }
+    function saveLink(){
+      const title=$("#linkTitle").value.trim(); const url=$("#linkUrl").value.trim();
+      if(!title || !url){ toast("网站名称和网址必填"); return; }
+      const data={title,url:safeUrl(url),categoryId:$("#linkCategory").value,logo:$("#linkLogo").value.trim(),desc:$("#linkDesc").value.trim(),tags:$("#linkTags").value.split(/[,，]/).map(t=>t.trim()).filter(Boolean)};
+      const id=$("#editingLinkId").value;
+      if(id){ const l=state.links.find(x=>x.id===id); Object.assign(l,data); toast("链接已更新"); }
+      else{ state.links.unshift({id:uid("link"),...data}); toast("链接已新增"); }
+      saveState(); clearLinkForm(); render();
+    }
+    function deleteLink(id){
+      const l=state.links.find(x=>x.id===id); if(!l) return;
+      if(!confirm(`确定删除「${l.title}」？`)) return;
+      state.links=state.links.filter(x=>x.id!==id); saveState(); render(); toast("链接已删除");
+    }
+
+    function exportData(){
+      const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+      const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="private-nav-backup.json"; a.click(); URL.revokeObjectURL(a.href);
+    }
+    function importData(file){
+      if(!file) return;
+      const reader=new FileReader();
+      reader.onload=()=>{ try{ const data=JSON.parse(reader.result); if(!data.categories||!data.links) throw new Error("bad"); state=data; saveState(); activeCat="all"; render(); toast("备份已导入"); }catch(e){ toast("导入失败：文件格式不对"); } };
+      reader.readAsText(file);
+    }
+    function resetData(){ if(confirm("确定清空并恢复示例数据吗？")){ state=sampleData(); saveState(); activeCat="all"; render(); toast("已重置"); } }
+    function saveSettings(){
+      state.settings={title:$("#setTitle").value.trim()||"私人收藏导航",subtitle:$("#setSub").value.trim()||"分类整理，一键直达",hero:$("#setHero").value.trim()||"你的私人网址收藏夹",desc:$("#setDesc").value.trim()||""};
+      saveState(); render(); toast("文字已保存");
+    }
+
+    function escapeHtml(str){ return String(str??"").replace(/[&<>'"]/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[m])); }
+    function hexToSoft(hex){
+      const ok=/^#([0-9a-f]{6})$/i.exec(hex||""); if(!ok) return "#f1f5f9";
+      const n=ok[1]; const r=parseInt(n.slice(0,2),16),g=parseInt(n.slice(2,4),16),b=parseInt(n.slice(4,6),16);
+      return `rgba(${r},${g},${b},.12)`;
+    }
+
+    $("#searchInput").addEventListener("input", e=>{query=e.target.value; renderGrid();});
+    $("#adminBtn").onclick=()=> isAdmin()?openManager():openLogin();
+    $("#loginBtn").onclick=login; $("#loginPass").addEventListener("keydown", e=>{if(e.key==="Enter") login();});
+    $("#logoutBtn").onclick=logout; $$('[data-close]').forEach(b=>b.onclick=closeModal);
+    $("#adminModal").addEventListener("click", e=>{ if(e.target.id==="adminModal") closeModal(); });
+    $("#addCatBtn").onclick=addCategory; $("#saveLinkBtn").onclick=saveLink; $("#clearLinkBtn").onclick=clearLinkForm;
+    $("#exportBtn").onclick=exportData; $("#importFile").onchange=e=>importData(e.target.files[0]);
+    $("#resetBtn").onclick=resetData; $("#saveSettingsBtn").onclick=saveSettings;
+    render();
+  </script>
+</body>
+</html>
